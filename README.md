@@ -17,9 +17,13 @@ cd your-repo
 
 ### Create a Conda Environment
 
+```bash
 conda create --name myenv
 conda activate myenv
 pip install -r requirements.txt
+```
 
 ### Run app
+```bash
 streamlit run .\start_web.py
+```
