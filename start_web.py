@@ -31,11 +31,15 @@ def get_google_books_info(book_title, target_language='en'):
 
     book_title = book_title.replace(" ", "%20")
 
-    url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&key={GOOGLE_BOOKS_API_KEY}&country=US"
+    #url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&key={GOOGLE_BOOKS_API_KEY}&country=US"
 
     #response = make_request(url)
 
-    response = requests.get(url)
+    url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&key={GOOGLE_BOOKS_API_KEY}"
+
+    headers = {'x-forwarded-for': '89.44.80.91'}
+
+    response = requests.get(url, headers=headers)
     
     #if response.status_code != 200:
         #logging.debug(f"Response: {response.status_code}, {response.text}")
