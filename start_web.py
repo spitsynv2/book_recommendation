@@ -26,6 +26,9 @@ def get_google_books_info(book_title, target_language='en'):
     url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&key={GOOGLE_BOOKS_API_KEY}&country=pl"
 
     response = requests.get(url)
+
+    print(response.status_code)
+    print(response.text)
     
     if response.status_code == 200:
         data = response.json()
