@@ -1,0 +1,12 @@
+import pandas as pd
+
+df = pd.read_csv('combined_user_ratings_numerical.csv')
+
+df = df.drop('Rating', axis=1)
+
+user_id_counts = df['ID'].value_counts()
+
+valid_user_ids = user_id_counts[user_id_counts >= 5].index
+df_filtered = df[df['ID'].isin(valid_user_ids)]
+
+df_filtered.to_csv('filtered_dataset.csv', index=False)

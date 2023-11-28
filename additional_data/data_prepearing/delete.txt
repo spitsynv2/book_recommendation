@@ -1,0 +1,11 @@
+import pandas as pd
+
+combined_data = pd.read_csv("combined_user_ratings.csv")
+
+sentence_to_remove = "This user doesn't have any rating"
+
+rows_to_remove = combined_data['Rating'].str.contains(sentence_to_remove)
+
+combined_data = combined_data[~rows_to_remove]
+
+combined_data.to_csv("combined_user_ratings_no_sentence.csv", index=False)

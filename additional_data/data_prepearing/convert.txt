@@ -1,0 +1,15 @@
+import pandas as pd
+
+combined_data = pd.read_csv("combined_user_ratings_no_sentence.csv")
+
+rating_mapping = {
+    "it was amazing": 5,
+    "really liked it": 4,
+    "liked it": 3,
+    "it was ok": 2,
+    "did not like it": 1
+}
+
+combined_data['Numerical_Rating'] = combined_data['Rating'].map(rating_mapping)
+
+combined_data.to_csv("combined_user_ratings_numerical.csv", index=False)
