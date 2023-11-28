@@ -1,5 +1,4 @@
 filtered_dataset_updated (Is merged data of https://www.kaggle.com/datasets/bahramjannesarr/goodreads-book-datasets-10m, prepared and filtered)
 
-Filter
-df = df.groupby('Title_lower').filter(lambda x: len(x) >= 30)
-df = df.groupby('User_id').filter(lambda x: len(x) >= 5)
+Steps
+combine -> delete -> convert -> filter -> sort -> update_drop
