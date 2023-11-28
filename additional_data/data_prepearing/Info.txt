@@ -1,0 +1,6 @@
+filtered_dataset_updated (Is merged data of https://www.kaggle.com/datasets/bahramjannesarr/goodreads-book-datasets-10m, prepared and filtered)
+
+Or prepare by your self, than use notebook
+
+Steps
+combine -> delete -> convert -> filter -> sort -> update_drop (data_prepearing folder)
