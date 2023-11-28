@@ -26,53 +26,44 @@ GOOGLE_BOOKS_API_KEY = st.secrets["api_key"]
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
+
 def get_google_books_info(book_title, target_language='en'):
-
     book_title = book_title.replace(" ", "%20")
+    country_codes = ['US', 'GB', 'CA', 'AU', 'DE', 'FR', 'IT', 'ES', 'JP', 'IN']
 
-    #url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&key={GOOGLE_BOOKS_API_KEY}&country=US"
-    url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&key={GOOGLE_BOOKS_API_KEY}"
+    for country_code in country_codes:
+        url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&key={GOOGLE_BOOKS_API_KEY}&country={country_code}"
 
-    #response = make_request(url)
+        response = requests.get(url)
 
-    headers = {"X-AppEngine-Country": "US"}
-    response = requests.get(url, headers=headers)
-    
-    #if response.status_code != 200:
-        #logging.debug(f"Response: {response.status_code}, {response.text}")
-        #logging.debug(f"Request URL: {url}")
-    
-    if response.status_code == 200:
-        data = response.json()
-        items = data.get('items', [])
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get('items', [])
 
-        # Collect preview links for the top 3 results before language filter
-        top3_preview_links = [item['volumeInfo'].get('previewLink', '') for item in items[:3]]
+            top3_preview_links = [item['volumeInfo'].get('previewLink', '') for item in items[:3]]
 
-        if items:
-            # Filter by language
-            filtered_items = [item for item in items if item['volumeInfo'].get('language', '') == target_language]
+            if items:
+                filtered_items = [item for item in items if item['volumeInfo'].get('language', '') == target_language]
 
-            # Sort by title similarity
-            sorted_items = sorted(filtered_items, key=lambda item: similar(book_title, item['volumeInfo']['title']), reverse=True)
+                sorted_items = sorted(filtered_items, key=lambda item: similar(book_title, item['volumeInfo']['title']), reverse=True)
 
-            if sorted_items:
-                item = sorted_items[0]['volumeInfo']
+                if sorted_items:
+                    item = sorted_items[0]['volumeInfo']
 
-                genres = item.get('categories', ['Genre not available'])[:5]
-                description = item.get('description', 'Description not available')[:200] + "..."
+                    genres = item.get('categories', ['Genre not available'])[:5]
+                    description = item.get('description', 'Description not available')[:200] + "..."
 
-                result = {
-                    'title': (item.get('title', 'Title not available')),
-                    'authors': ', '.join(item.get('authors', ['Author not available'])),
-                    'genres': ', '.join(genres),
-                    'description': description,
-                    'preview_link': item.get('previewLink', ''),
-                    'top3_preview_links': top3_preview_links,
-                    'small_thumbnail': item.get('imageLinks', {}).get('smallThumbnail', '')
-                }
+                    result = {
+                        'title': (item.get('title', 'Title not available')),
+                        'authors': ', '.join(item.get('authors', ['Author not available'])),
+                        'genres': ', '.join(genres),
+                        'description': description,
+                        'preview_link': item.get('previewLink', ''),
+                        'top3_preview_links': top3_preview_links,
+                        'small_thumbnail': item.get('imageLinks', {}).get('smallThumbnail', '')
+                    }
 
-                return result
+                    return result
 
     return None
 
