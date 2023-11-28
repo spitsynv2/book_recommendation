@@ -3,6 +3,7 @@ import pickle
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 import requests
+from difflib import SequenceMatcher
 
 with open('book_pivot.pkl', 'rb') as pivot_file:
     book_pivot = pickle.load(pivot_file)
