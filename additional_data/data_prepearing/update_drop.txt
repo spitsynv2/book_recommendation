@@ -1,0 +1,9 @@
+import pandas as pd
+
+df = pd.read_csv('filtered_dataset_sorted.csv')
+
+df = df[~df['Name'].str.contains('[\u0600-\u06FF]+')]
+
+df = df[df.groupby('Name')['ID'].transform('count') > 1]
+
+df.to_csv('filtered_dataset_updated.csv', index=False)

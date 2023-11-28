@@ -1,0 +1,7 @@
+import pandas as pd
+
+df_filtered = pd.read_csv('filtered_dataset.csv')
+
+df_filtered_sorted = df_filtered.sort_values(by='Name')
+
+df_filtered_sorted.to_csv('filtered_dataset_sorted.csv', index=False)
