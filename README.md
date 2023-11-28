@@ -3,13 +3,12 @@
 This a small project that show usage of knn algorithm to create a recommendation system <br/>
 https://book-recommendation-system-v01.streamlit.app/
 
-# Original dataset: https://www.kaggle.com/datasets/bahramjannesarr/goodreads-book-datasets-10m
-
 ## Installation
 
 ### Prerequisites
 
 - [Anaconda or Miniconda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html)
+- Original dataset: https://www.kaggle.com/datasets/bahramjannesarr/goodreads-book-datasets-10m (optional)
 
 ### Clone the Repository
 
