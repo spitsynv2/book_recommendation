@@ -4,8 +4,8 @@ import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 import requests
 from difflib import SequenceMatcher
-from retrying import retry
-import logging
+#from retrying import retry
+#import logging
 
 #logging.basicConfig(level=logging.DEBUG)
 
@@ -19,9 +19,9 @@ unique_books_names = pd.Series(book_pivot.index)
 
 GOOGLE_BOOKS_API_KEY = st.secrets["api_key"]
 
-@retry(wait_exponential_multiplier=1000, wait_exponential_max=10000, stop_max_attempt_number=3)
-def make_request(url):
-    return requests.get(url)
+#@retry(wait_exponential_multiplier=1000, wait_exponential_max=10000, stop_max_attempt_number=3)
+#def make_request(url):
+    #return requests.get(url)
 
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
@@ -30,10 +30,14 @@ def get_google_books_info(book_title, target_language='en'):
 
     book_title = book_title.replace(" ", "%20")
 
-    url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&key={GOOGLE_BOOKS_API_KEY}&country=NO"
+    #url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&key={GOOGLE_BOOKS_API_KEY}&country=US"
+    url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&key={GOOGLE_BOOKS_API_KEY}"
 
-    response = make_request(url)
+    #response = make_request(url)
 
+    headers = {"X-AppEngine-Country": "US"}
+    response = requests.get(url, headers=headers)
+    
     #if response.status_code != 200:
         #logging.debug(f"Response: {response.status_code}, {response.text}")
         #logging.debug(f"Request URL: {url}")
