@@ -7,7 +7,7 @@ from difflib import SequenceMatcher
 from retrying import retry
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 
 with open('book_pivot.pkl', 'rb') as pivot_file:
     book_pivot = pickle.load(pivot_file)
@@ -34,9 +34,9 @@ def get_google_books_info(book_title, target_language='en'):
 
     response = make_request(url)
 
-    if response.status_code != 200:
-        logging.debug(f"Response: {response.status_code}, {response.text}")
-        logging.debug(f"Request URL: {url}")
+    #if response.status_code != 200:
+        #logging.debug(f"Response: {response.status_code}, {response.text}")
+        #logging.debug(f"Request URL: {url}")
     
     if response.status_code == 200:
         data = response.json()
