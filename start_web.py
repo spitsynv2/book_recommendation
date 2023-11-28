@@ -27,9 +27,8 @@ def get_google_books_info(book_title, target_language='en'):
 
     response = requests.get(url)
 
-    if response.status_code != 200:
-        print(response.status_code)
-        print(response.text)
+    print(response.status_code)
+    print(url)
     
     if response.status_code == 200:
         data = response.json()
