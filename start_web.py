@@ -4,7 +4,10 @@ import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 import requests
 from difflib import SequenceMatcher
+from retrying import retry
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
 
 with open('book_pivot.pkl', 'rb') as pivot_file:
     book_pivot = pickle.load(pivot_file)
@@ -16,6 +19,10 @@ unique_books_names = pd.Series(book_pivot.index)
 
 GOOGLE_BOOKS_API_KEY = st.secrets["api_key"]
 
+@retry(wait_exponential_multiplier=1000, wait_exponential_max=10000, stop_max_attempt_number=3)
+def make_request(url):
+    return requests.get(url)
+
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
@@ -25,10 +32,10 @@ def get_google_books_info(book_title, target_language='en'):
 
     url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&key={GOOGLE_BOOKS_API_KEY}&country=pl"
 
-    response = requests.get(url)
+    response = make_request(url)
 
-    print(response.status_code)
-    print(url)
+    logging.debug(f"Response: {response.status_code}, {response.text}")
+    logging.debug(f"Request URL: {url}")
     
     if response.status_code == 200:
         data = response.json()
