@@ -3,6 +3,8 @@
 This a small project that show usage of knn algorithm to create a recommendation system <br/>
 https://book-recommendation-system-v01.streamlit.app/
 
+## Original dataset: https://www.kaggle.com/datasets/bahramjannesarr/goodreads-book-datasets-10m
+
 ## Installation
 
 ### Prerequisites
