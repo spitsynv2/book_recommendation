@@ -24,8 +24,11 @@ def get_google_books_info(book_title, target_language='en'):
     book_title = book_title.replace(" ", "%20")
 
     url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&key={GOOGLE_BOOKS_API_KEY}"
+    print(url)
 
     response = requests.get(url)
+
+    print(response.status_code)
 
     if response.status_code == 200:
         data = response.json()
