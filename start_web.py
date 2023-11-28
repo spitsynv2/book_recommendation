@@ -37,7 +37,8 @@ def get_google_books_info(book_title, target_language='en'):
 
     url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&key={GOOGLE_BOOKS_API_KEY}"
 
-    headers = {'x-forwarded-for': '89.44.80.91'}
+    original_ip = st.request.headers.get('x-forwarded-for') or st.request.remote_addr
+    headers = {'x-forwarded-for': original_ip}
 
     response = requests.get(url, headers=headers)
     
