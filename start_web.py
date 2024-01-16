@@ -13,11 +13,6 @@ with open('book_recommendation_model.pkl', 'rb') as model_file:
 
 unique_books_names = pd.Series(book_pivot.index)
 
-<<<<<<< HEAD
-=======
-GOOGLE_BOOKS_API_KEY = st.secrets["api_key"]
-
->>>>>>> aeea6f5516663f89ab332db13019094b812bdf8f
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
@@ -25,11 +20,7 @@ def get_google_books_info(book_title, target_language='en'):
 
     book_title = book_title.replace(" ", "%20")
 
-<<<<<<< HEAD
-    url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}"
-=======
     url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&country=US"
->>>>>>> aeea6f5516663f89ab332db13019094b812bdf8f
 
     response = requests.get(url)
     
