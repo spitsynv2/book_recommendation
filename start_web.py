@@ -4,10 +4,6 @@ import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 import requests
 from difflib import SequenceMatcher
-#from retrying import retry
-#import logging
-
-#logging.basicConfig(level=logging.DEBUG)
 
 with open('book_pivot.pkl', 'rb') as pivot_file:
     book_pivot = pickle.load(pivot_file)
@@ -17,53 +13,45 @@ with open('book_recommendation_model.pkl', 'rb') as model_file:
 
 unique_books_names = pd.Series(book_pivot.index)
 
-GOOGLE_BOOKS_API_KEY = st.secrets["api_key"]
-
-#@retry(wait_exponential_multiplier=1000, wait_exponential_max=10000, stop_max_attempt_number=3)
-#def make_request(url):
-    #return requests.get(url)
-
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
-
 def get_google_books_info(book_title, target_language='en'):
+
     book_title = book_title.replace(" ", "%20")
-    country_codes = ['US', 'GB', 'CA', 'AU', 'DE', 'FR', 'IT', 'ES', 'JP', 'IN']
 
-    for country_code in country_codes:
-        url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}&key={GOOGLE_BOOKS_API_KEY}&country={country_code}"
+    url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{book_title}"
 
-        response = requests.get(url)
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        data = response.json()
+        items = data.get('items', [])
 
-        if response.status_code == 200:
-            data = response.json()
-            items = data.get('items', [])
+        top3_preview_links = [item['volumeInfo'].get('previewLink', '') for item in items[:3]]
 
-            top3_preview_links = [item['volumeInfo'].get('previewLink', '') for item in items[:3]]
+        if items:
+            filtered_items = [item for item in items if item['volumeInfo'].get('language', '') == target_language]
 
-            if items:
-                filtered_items = [item for item in items if item['volumeInfo'].get('language', '') == target_language]
+            sorted_items = sorted(filtered_items, key=lambda item: similar(book_title, item['volumeInfo']['title']), reverse=True)
 
-                sorted_items = sorted(filtered_items, key=lambda item: similar(book_title, item['volumeInfo']['title']), reverse=True)
+            if sorted_items:
+                item = sorted_items[0]['volumeInfo']
 
-                if sorted_items:
-                    item = sorted_items[0]['volumeInfo']
+                genres = item.get('categories', ['Genre not available'])[:5]
+                description = item.get('description', 'Description not available')[:200] + "..."
 
-                    genres = item.get('categories', ['Genre not available'])[:5]
-                    description = item.get('description', 'Description not available')[:200] + "..."
+                result = {
+                    'title': (item.get('title', 'Title not available')),
+                    'authors': ', '.join(item.get('authors', ['Author not available'])),
+                    'genres': ', '.join(genres),
+                    'description': description,
+                    'preview_link': item.get('previewLink', ''),
+                    'top3_preview_links': top3_preview_links,
+                    'small_thumbnail': item.get('imageLinks', {}).get('smallThumbnail', '')
+                }
 
-                    result = {
-                        'title': (item.get('title', 'Title not available')),
-                        'authors': ', '.join(item.get('authors', ['Author not available'])),
-                        'genres': ', '.join(genres),
-                        'description': description,
-                        'preview_link': item.get('previewLink', ''),
-                        'top3_preview_links': top3_preview_links,
-                        'small_thumbnail': item.get('imageLinks', {}).get('smallThumbnail', '')
-                    }
-
-                    return result
+                return result
 
     return None
 
@@ -112,7 +100,7 @@ def recommend_books(book_title, pivot_data, model, num_recommendations=10):
             if small_thumbnail and small_thumbnail != 'Thumbnail not available':
                 col2.image(small_thumbnail, caption="Book image", use_column_width=False, width=75)
             else:
-                st.write("   Thumbnail not available")
+                col2.image('no_cover_thumb.jpg', caption="Default Book image", use_column_width=False, width=75)
 
         else:
             st.write("   Book information not available")
