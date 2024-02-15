@@ -1,4 +1,4 @@
-# Book_recommendation_sytem
+# Book_recommendation_system
 
 This a small project that show usage of knn algorithm to create a recommendation system <br/>
 https://book-recommendation-v02.streamlit.app/
