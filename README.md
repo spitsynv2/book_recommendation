@@ -29,3 +29,6 @@ pip install -r requirements.txt
 ```bash
 streamlit run .\start_web.py
 ```
+
+## Screenshot
+![example img](additional_data/example.PNG?raw=true "example img")
