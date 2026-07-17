@@ -1,7 +1,0 @@
-book_title = "All Tomorrow's Parties (Bridge, #3)"
-encoded_title = book_title.replace(" ", "%20")
-
-api_key = "REMOVED_API_KEY"
-
-google_books_api_url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{encoded_title}&key={api_key}"
-print(google_books_api_url)
